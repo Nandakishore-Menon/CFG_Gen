@@ -1,9 +1,9 @@
 # PL Project: Control Flow Graphs Generator
 
-### Nandakishore S Menon | IMT2019057
-### Rachna S Kedigehalli | IMT2019069
-### Yashovardhan Reddy | IMT2019097
-### Lalith Kumar Reddy G | IMT2019509
+Nandakishore S Menon | IMT2019057
+Rachna S Kedigehalli | IMT2019069
+Yashovardhan Reddy | IMT2019097
+Lalith Kumar Reddy G | IMT2019509
 
 #
 
