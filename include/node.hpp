@@ -1,3 +1,4 @@
+#pragma once
 #include<string>
 #include "line_type.hpp"
 
@@ -6,7 +7,7 @@ class Node
 private:
     
 public:
-    id ID;
+    int ID;
     Node * next;
     Node * prev;
     Node * child;
