@@ -5,7 +5,9 @@
 class Node
 {
 private:
-    
+    bool multiline;
+    bool elseused;
+
 public:
     int ID;
     Node * next;
@@ -14,6 +16,9 @@ public:
     Node * parent;
     std::string code;
     int line_type;
-    Node(/* args */){}
+    Node(int ID, std::string code, int line_type, bool multiline);
     ~Node(){}
+
+    friend std::ostream& operator<< (std::ostream& out, const Node& node);
 };
+
