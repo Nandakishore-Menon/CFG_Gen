@@ -1,16 +1,4 @@
-class CDG
-{
-private:
-    
-public:
-    CDG();
-    ~CDG();
-};
+#include "../../include/cdg/cdg.hpp"
 
-CDG::CDG()
-{
-}
-
-CDG::~CDG()
-{
+CDG::CDG() {
 }
