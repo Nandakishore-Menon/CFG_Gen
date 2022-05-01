@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../include/node.hpp"
 
-Node::Node(int ID, std::string code, int line_type, bool multiline=false, bool haslabel=false, std::string label = "") {
+Node::Node(int ID, std::string code, int line_type, bool multiline /*=false*/, bool haslabel /*=false*/, std::string label /*= ""*/) {
     this->ID = ID;
     this->code = code;
     this->line_type = line_type;

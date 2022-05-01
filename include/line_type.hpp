@@ -1,6 +1,6 @@
 #pragma once
 
-#define BLOCK 0
+#define EXPRESSION 0
 #define IF 1
 #define ELSEIF 2
 #define ELSE 3

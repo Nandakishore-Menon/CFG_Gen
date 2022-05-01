@@ -17,7 +17,8 @@ public:
     int line_type;
     bool multiline;
     bool elseused;
-    Node(int ID, std::string code, int line_type, bool multiline, bool haslabel, std::string label);
+    Node(int ID, std::string code, int line_type, bool multiline=false, 
+            bool haslabel=false, std::string label = "");
     ~Node(){}
 
     friend std::ostream& operator<< (std::ostream& out, const Node& node);
