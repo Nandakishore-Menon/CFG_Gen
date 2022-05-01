@@ -47,7 +47,7 @@ void printList(Node* head) {
         // printNode(temp);
         std::cout << *temp << "->";
         if (temp->child != NULL) {
-            std::cout << "\nChild: ";
+            std::cout << "\nChild of: " << temp->code;
             printList(temp->child);
         }
         // 
@@ -56,4 +56,28 @@ void printList(Node* head) {
         temp = temp->next;
     }
     std::cout << *temp << std::endl;
+}
+
+void printListRec(Node* head) {
+    Node* temp = head;
+    if (temp == NULL) {
+        std::cout << "NULL\n";
+        return;
+    }
+
+    std::cout << *temp ;
+    // "Next of " << temp->code << "\n";
+    if (temp->next)
+        std::cout << "Next:" << *(temp->next);
+    else
+        std::cout << "Next: NULL";
+    if (temp->child)
+        std::cout << "Child" << *(temp->child);
+    else
+        std::cout << "Child: NULL\n";
+    std::cout << "\n";
+    printListRec(temp->next);
+    // std::cout << "Child of "<< temp->code << "\n";
+    printListRec(temp->child);
+    
 }

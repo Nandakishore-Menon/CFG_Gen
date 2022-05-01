@@ -3,3 +3,4 @@
 
 void append(Node** head_ref, Node* new_node);
 void printList(Node* head);
+void printListRec(Node* head);

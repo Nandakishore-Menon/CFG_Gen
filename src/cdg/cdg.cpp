@@ -5,8 +5,8 @@
 
 CDG::CDG(Node* lines) {
     this->lines = lines;
-    generate(NULL, this->lines);
-    printList(this->lines);
+    generate(NULL, this->lines, true);
+    printListRec(this->lines);
     /*
     Node* current_line = this->lines;
     while(current_line != NULL) {
@@ -37,11 +37,12 @@ CDG::CDG(Node* lines) {
     }
     */
 }
-Node* CDG::generate(Node* prev, Node* current) {
-/*Returns the next line after the block that satrts with the current line
+Node* CDG::generate(Node* prev, Node* current, bool multiline_block) {
+/*bool multiline_block indicates if the current line is part of a multiline block.
+Returns the next line after the block that satrts with the current line
 */
     Node* current_line = current;
-    std::cout << "Current line: " << *current_line;
+    // std::cout << "Current line: " << *current_line;
     if (current_line->next == NULL) {
         return NULL;
     }
@@ -49,7 +50,10 @@ Node* CDG::generate(Node* prev, Node* current) {
     {
     case EXPRESSION:
         // return current_line->next;
-        return generate(current, current_line->next);
+        if (multiline_block)
+            return generate(current, current_line->next, multiline_block);
+        else
+            return current_line->next;
         break;
     
     case IF:
@@ -58,14 +62,16 @@ Node* CDG::generate(Node* prev, Node* current) {
     case FOR:
     case WHILE:
     {
-        std::cout<< "--------------Going into conditionals\n";
+        // std::cout<< "--------------Going into conditionals\n";
         Node* line_child = current_line->next;
         current_line->child = line_child;
         line_child->parent = current_line;
-        Node* line_next = generate(current, line_child);
+        Node* line_next = generate(current, line_child, current_line->multiline);
+        if (!current_line->multiline)
+            return line_next;
         current_line->next = line_next;
         line_next->prev = current_line;
-        return generate(current, line_next);
+        return generate(current, line_next, multiline_block);
         break;
     }
     case CLOSEBRACE:
