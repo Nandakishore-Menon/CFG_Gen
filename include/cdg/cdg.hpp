@@ -3,7 +3,7 @@
 class CDG
 {
 private:
-    /* data */
+    Node* lines;
 public:
     CDG(Node* lines);
     ~CDG(){}

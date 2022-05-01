@@ -5,8 +5,6 @@
 class Node
 {
 private:
-    bool multiline;
-    bool elseused;
     bool haslabel;
     std::string label; 
 public:
@@ -17,6 +15,8 @@ public:
     Node * parent;
     std::string code;
     int line_type;
+    bool multiline;
+    bool elseused;
     Node(int ID, std::string code, int line_type, bool multiline, bool haslabel, std::string label);
     ~Node(){}
 
