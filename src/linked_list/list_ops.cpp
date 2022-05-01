@@ -46,7 +46,11 @@ void printList(Node* head) {
         // std::cout << "Current: ";
         // printNode(temp);
         std::cout << *temp << "->";
-        // std::cout << "Child: ";
+        if (temp->child != NULL) {
+            std::cout << "\nChild: ";
+            printList(temp->child);
+        }
+        // 
         // printNode(temp->child);
         // std::cout << std::endl;
         temp = temp->next;

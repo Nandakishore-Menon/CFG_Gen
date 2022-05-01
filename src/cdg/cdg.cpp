@@ -1,8 +1,13 @@
+#include<iostream>
 #include "../../include/cdg/cdg.hpp"
 #include "../../include/line_type.hpp"
+#include "../../include/linked_list/list_ops.hpp"
 
 CDG::CDG(Node* lines) {
     this->lines = lines;
+    generate(NULL, this->lines);
+    printList(this->lines);
+    /*
     Node* current_line = this->lines;
     while(current_line != NULL) {
         switch (current_line->line_type)
@@ -25,9 +30,52 @@ CDG::CDG(Node* lines) {
             }
             break;
         case CLOSEBRACE:
-            
+
         default:
             break;
         }
+    }
+    */
+}
+Node* CDG::generate(Node* prev, Node* current) {
+/*Returns the next line after the block that satrts with the current line
+*/
+    Node* current_line = current;
+    std::cout << "Current line: " << *current_line;
+    if (current_line->next == NULL) {
+        return NULL;
+    }
+    switch (current_line->line_type)
+    {
+    case EXPRESSION:
+        // return current_line->next;
+        return generate(current, current_line->next);
+        break;
+    
+    case IF:
+    case ELSEIF:
+    case ELSE:
+    case FOR:
+    case WHILE:
+    {
+        std::cout<< "--------------Going into conditionals\n";
+        Node* line_child = current_line->next;
+        current_line->child = line_child;
+        line_child->parent = current_line;
+        Node* line_next = generate(current, line_child);
+        current_line->next = line_next;
+        line_next->prev = current_line;
+        return generate(current, line_next);
+        break;
+    }
+    case CLOSEBRACE:
+    {
+        Node* line_next = current_line->next;
+        current_line->next = NULL;
+        return line_next;
+        break;
+    }
+    default:
+        break;
     }
 }
