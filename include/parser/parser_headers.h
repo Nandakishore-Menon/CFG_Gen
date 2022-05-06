@@ -17,3 +17,10 @@
 #define ELSE 16
 #define ENDOFFILE 17
 #define STATEMENT 18
+#define SWITCH 19
+#define SWITCH_MULTILINE 20
+#define CASE 21
+#define CASE_MULTILINE 22
+#define BREAK 23
+#define CONTINUE 24
+#define RETURN 25

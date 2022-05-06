@@ -6,7 +6,7 @@
 
 %%
 
-;                                       return P_SEMICOLON;
+;                                       return SEMICOLON;
 
 [#][^\n]*                               return PREPROCESSOR;
 
@@ -37,6 +37,20 @@
 "else if("([^\(]*)\)                    return ELSE_IF;
 
 "else"                                  return ELSE;
+
+"switch("([^\(]*)\)([" "]*)"{"          return SWITCH_MULTILINE;
+
+"switch("([^\(]*)\)                     return SWITCH;
+
+"case"([" "]*)([^:]*)":"([" "]*)"{"     return CASE_MULTILINE;
+
+"case"([" "]*)([^:]*)":"                return CASE;
+
+"continue;"                             return CONTINUE;
+
+"break;"                                return BREAK;
+
+"return"(([" "]*)([^";"]*))?";"         return RETURN;
 
 [\t\n]                                  return WHITE_TAB_SPACE;
 

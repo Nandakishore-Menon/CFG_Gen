@@ -94,6 +94,27 @@ int main(void){
             // cout<<"got statement\n";
             // cout<<"text :"<<yytext<<endl;
             break;
+        case 19:
+            cout<<"got a switch statemen\n";
+            cout<<"text :"<<yytext<<endl;
+        case 20:
+            cout<<"got a multiline switch\n";
+            cout<<"text :"<<yytext<<endl;
+        case 21:
+            cout<<"got a case statement\n";
+            cout<<"text :"<<yytext<<endl;
+        case 22:
+            cout<<"got a multiline case statement\n";
+            cout<<"text :"<<yytext<<endl;
+        case 23:
+            cout<<"got a break statement\n";
+            cout<<"text :"<<yytext<<endl;
+        case 24:
+            cout<<"got a continue statement\n";
+            cout<<"text :"<<yytext<<endl;
+        case 25:
+            cout<<"got a return statement\n";
+            cout<<"text :"<<yytext<<endl;
         default:
             break;
         }
