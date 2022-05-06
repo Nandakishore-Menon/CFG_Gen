@@ -6,11 +6,12 @@ Node* generate_sample_code1();
 Node* generate_sample_code2();
 
 int main() {
+    /*
     std::cout << "Test case 1:--------------------\n";
     Node* lines1 = generate_sample_code1();
     CDG* cdg1 = new CDG(lines1);
     std::cout << "--------------------------------\n";
-
+    */
     std::cout << "Test case 2:--------------------\n";
     Node* lines2 = generate_sample_code2();
     CDG* cdg2 = new CDG(lines2);

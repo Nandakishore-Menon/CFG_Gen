@@ -52,12 +52,37 @@ Returns the next line after the block that satrts with the current line
         // return current_line->next;
         if (multiline_block)
             return generate(current, current_line->next, multiline_block);
-        else
-            return current_line->next;
+        else {
+            Node* line_next = current_line->next;
+            current_line->next = NULL;
+            return line_next;
+        }
         break;
     
     case IF:
     case ELSEIF:
+    {
+        // std::cout<< "--------------Going into conditionals\n";
+        Node* line_child = current_line->next;
+        current_line->child = line_child;
+        line_child->parent = current_line;
+        Node* line_next = generate(current, line_child, current_line->multiline);
+        if (multiline_block || line_next->line_type == ELSEIF || line_next->line_type == ELSE) {
+            // Then this block is not the last in the current block
+            // Next block will belong to the current block itself
+            current_line->next = line_next;
+            line_next->prev = current_line;
+        }
+        else {
+            // Then this block is the last in the current block
+            // Next block will belong to the outer blocks
+            current_line->next = NULL;
+        }
+        if (!current_line->multiline)
+            return line_next;
+        return generate(current, line_next, multiline_block);
+        break;
+    }
     case ELSE:
     case FOR:
     case WHILE:
@@ -67,10 +92,19 @@ Returns the next line after the block that satrts with the current line
         current_line->child = line_child;
         line_child->parent = current_line;
         Node* line_next = generate(current, line_child, current_line->multiline);
+        if (multiline_block) {
+            // Then this block is not the last in the current block
+            // Next block will belong to the current block itself
+            current_line->next = line_next;
+            line_next->prev = current_line;
+        }
+        else {
+            // Then this block is the last in the current block
+            // Next block will belong to the outer blocks
+            current_line->next = NULL;
+        }
         if (!current_line->multiline)
             return line_next;
-        current_line->next = line_next;
-        line_next->prev = current_line;
         return generate(current, line_next, multiline_block);
         break;
     }
