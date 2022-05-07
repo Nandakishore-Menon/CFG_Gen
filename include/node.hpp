@@ -16,7 +16,7 @@ public:
     std::string code;
     int line_type;
     bool multiline;
-    bool elseused;
+    // bool elseused;
     Node(int ID, std::string code, int line_type, bool multiline=false, 
             bool haslabel=false, std::string label = "");
     ~Node(){}

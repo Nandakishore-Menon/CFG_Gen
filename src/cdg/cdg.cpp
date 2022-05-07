@@ -21,6 +21,7 @@ Returns the next line after the block that satrts with the current line
     switch (current_line->line_type)
     {
     case EXPRESSION:
+    case BREAK:
         // return current_line->next;
         if (multiline_block)
             return generate(current, current_line->next, multiline_block);
@@ -61,6 +62,7 @@ Returns the next line after the block that satrts with the current line
     case WHILE:
     case SWITCH: //multiline always true
     case CASE:
+    case DEFAULT:
     {
         // std::cout<< "--------------Going into conditionals\n";
         Node* line_child = current_line->next;
