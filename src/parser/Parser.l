@@ -6,56 +6,56 @@
 
 %%
 
-;                                       return SEMICOLON;
+;                                       return p_SEMICOLON;
 
-[#][^\n]*                               return PREPROCESSOR;
+[#][^\n]*                               return p_PREPROCESSOR;
 
-"//"([^\n])*                            return SINGLE_LINE_COMMENT;
+"//"([^\n])*                            return p_SINGLE_LINE_COMMENT;
 
-"/*"([^*]|(\*+[^*/]))*\*+\/             return MULTILINE_COMMENT;
+"/*"([^*]|(\*+[^*/]))*\*+\/             return p_MULTILINE_COMMENT;
 
-"{"                                     return OPENING_BRACE;
+"{"                                     return p_OPENING_BRACE;
 
-"}"                                     return CLOSING_BRACE;
+"}"                                     return p_CLOSING_BRACE;
 
-"for("([^\(]*)\)([" "]*)"{"             return FOR_MULTILINE;
+"for("([^\(]*)\)([" "]*)"{"             return p_FOR_MULTILINE;
 
-"while("([^\(]*)\)([" "]*)"{"           return WHILE_MULTILINE;
+"while("([^\(]*)\)([" "]*)"{"           return p_WHILE_MULTILINE;
 
-"if("([^\(]*)\)([" "]*)"{"              return IF_MULTILINE;
+"if("([^\(]*)\)([" "]*)"{"              return p_IF_MULTILINE;
 
-"else if("([^\(]*)\)([" "]*)"{"         return ELSE_IF_MULTILINE;
+"else if("([^\(]*)\)([" "]*)"{"         return p_ELSE_IF_MULTILINE;
 
-"else"([" "]*)"{"                       return ELSE_MULTILINE;
+"else"([" "]*)"{"                       return p_ELSE_MULTILINE;
 
-"for("([^\(]*)\)                        return FOR;
+"for("([^\(]*)\)                        return p_FOR;
 
-"while("([^\(]*)\)                      return WHILE;
+"while("([^\(]*)\)                      return p_WHILE;
 
-"if("([^\(]*)\)                         return IF;
+"if("([^\(]*)\)                         return p_IF;
 
-"else if("([^\(]*)\)                    return ELSE_IF;
+"else if("([^\(]*)\)                    return p_ELSE_IF;
 
-"else"                                  return ELSE;
+"else"                                  return p_ELSE;
 
-"switch("([^\(]*)\)([" "]*)"{"          return SWITCH_MULTILINE;
+"switch("([^\(]*)\)([" "]*)"{"          return p_SWITCH_MULTILINE;
 
-"switch("([^\(]*)\)                     return SWITCH;
+"switch("([^\(]*)\)                     return p_SWITCH;
 
-"case"([" "]*)([^:]*)":"([" "]*)"{"     return CASE_MULTILINE;
+"case"([" "]*)([^:]*)":"([" "]*)"{"     return p_CASE_MULTILINE;
 
-"case"([" "]*)([^:]*)":"                return CASE;
+"case"([" "]*)([^:]*)":"                return p_CASE;
 
-"continue;"                             return CONTINUE;
+"continue;"                             return p_CONTINUE;
 
-"break;"                                return BREAK;
+"break;"                                return p_BREAK;
 
-"return"(([" "]*)([^";"]*))?";"         return RETURN;
+"return"(([" "]*)([^";"]*))?";"         return p_RETURN;
 
-[\t\n]                                  return WHITE_TAB_SPACE;
+[\t\n]                                  return p_WHITE_TAB_SPACE;
 
-<<EOF>>                                 return ENDOFFILE;
+<<EOF>>                                 return p_ENDOFFILE;
 
-.                                       return STATEMENT;
+.                                       return p_STATEMENT;
 
 %%
