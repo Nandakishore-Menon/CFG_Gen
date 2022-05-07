@@ -7,9 +7,11 @@ Node* generate_sample_code2();
 Node* generate_sample_code3();
 Node* generate_sample_code4();
 Node* generate_sample_code5();
+Node* generate_sample_code6();
+Node* generate_sample_code7();
 
 int main() {
-    /*
+    
     std::cout << "Test case 1:--------------------\n";
     Node* lines1 = generate_sample_code1();
     CDG* cdg1 = new CDG(lines1);
@@ -29,10 +31,20 @@ int main() {
     Node* lines4 = generate_sample_code4();
     CDG* cdg4 = new CDG(lines4);
     std::cout << "--------------------------------\n";
-    */
+    
     std::cout << "Test case 5:--------------------\n";
     Node* lines5 = generate_sample_code5();
     CDG* cdg5 = new CDG(lines5);
+    std::cout << "--------------------------------\n";
+    
+    std::cout << "Test case 6:--------------------\n";
+    Node* lines6 = generate_sample_code6();
+    CDG* cdg6 = new CDG(lines6);
+    std::cout << "--------------------------------\n";
+    
+    std::cout << "Test case 7:--------------------\n";
+    Node* lines7 = generate_sample_code7();
+    CDG* cdg7 = new CDG(lines7);
     std::cout << "--------------------------------\n";
 }
 
@@ -60,8 +72,8 @@ Node* generate_sample_code1() {
     append(&lines, new_node);
     new_node = new Node(6, "}", CLOSEBRACE, false);
     append(&lines, new_node);
-    // new_node = new Node(7, "x++;", EXPRESSION, false);
-    // append(&lines, new_node);
+    new_node = new Node(7, "x++;", EXPRESSION, false);
+    append(&lines, new_node);
     return lines;
 }
 
@@ -237,6 +249,94 @@ Node* generate_sample_code5() {
     new_node = new Node(11, "break;", BREAK, false);
     append(&lines, new_node);
     new_node = new Node(12, "}", CLOSEBRACE, false);
+    append(&lines, new_node);
+    return lines;
+}
+
+Node* generate_sample_code6() {
+/*Sample code:
+    int x=0;
+    switch(x) {
+        case 1:
+            x+=1;
+        case 2:
+            x+= 2;
+            break;
+        case 3:
+            x+=3;
+        default:
+            x+=x;
+    }
+    x++;
+    */
+    // Linked list after parsing for the above sample code:
+    Node* lines = NULL;
+    Node* new_node = new Node(1, "int x = 0;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(2, "switch(x) {", SWITCH, true);
+    append(&lines, new_node);
+    new_node = new Node(3, "case 1:", CASE, false);
+    append(&lines, new_node);
+    new_node = new Node(4, "x+=1;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(5, "case 2:", CASE, false);
+    append(&lines, new_node);
+    new_node = new Node(6, "x+=2;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(7, "break;", BREAK, false);
+    append(&lines, new_node);
+    new_node = new Node(8, "case 3:", CASE, false);
+    append(&lines, new_node);
+    new_node = new Node(9, "x+=3;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(10, "default:", DEFAULT, false);
+    append(&lines, new_node);
+    new_node = new Node(11, "x+=x;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(12, "}", CLOSEBRACE, false);
+    append(&lines, new_node);
+    new_node = new Node(13, "x++;", EXPRESSION, false);
+    append(&lines, new_node);
+    return lines;
+}
+
+Node* generate_sample_code7() {
+/*Sample code:
+    int x=0;
+    for(int i = 0 ; i < 10; i++){
+        switch(x) {
+            case 1:
+            case 2:
+            case 3:
+                x+=3;
+                break;
+            default:
+        }
+    }
+    */
+    // Linked list after parsing for the above sample code:
+    Node* lines = NULL;
+    Node* new_node = new Node(1, "int x = 0;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(2, "for(int i = 0 ; i < 10; i++){", FOR, true);
+    append(&lines, new_node);
+    new_node = new Node(3, "switch(x) {", SWITCH, true);
+    append(&lines, new_node);
+    new_node = new Node(4, "case 1:", CASE, false);
+    append(&lines, new_node);
+    new_node = new Node(5, "case 2:", CASE, false);
+    append(&lines, new_node);
+    new_node = new Node(6, "case 3:", CASE, false);
+    append(&lines, new_node);
+    new_node = new Node(7, "x+=3;", EXPRESSION, false);
+    append(&lines, new_node);
+    new_node = new Node(8, "break;", BREAK, false);
+    append(&lines, new_node);
+    new_node = new Node(9, "default:", DEFAULT, false);
+    append(&lines, new_node);
+    new_node = new Node(10, "}", CLOSEBRACE, false);
+    append(&lines, new_node);
+    new_node = new Node(11, "}", CLOSEBRACE, false);
     append(&lines, new_node);
     return lines;
 }

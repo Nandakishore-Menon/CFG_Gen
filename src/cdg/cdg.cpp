@@ -14,7 +14,7 @@ Node* CDG::generate(Node* prev, Node* current, bool multiline_block) {
 Returns the next line after the block that satrts with the current line
 */
     Node* current_line = current;
-    std::cout << "\nCurrent line: " << *current_line;
+    // std::cout << "\nCurrent line: " << *current_line;
     if (current_line->next == NULL) {
         return NULL;
     }
@@ -22,6 +22,8 @@ Returns the next line after the block that satrts with the current line
     {
     case EXPRESSION:
     case BREAK:
+    case CONTINUE:
+    case RETURN:
     {
         // return current_line->next;
         if (multiline_block) {
@@ -102,7 +104,7 @@ Returns the next line after the block that satrts with the current line
         Node* line_child = current_line->next;
 
         // For combined case statements
-        if (line_child->line_type == CASE || line_child->line_type == DEFAULT)
+        if (line_child->line_type == CASE || line_child->line_type == DEFAULT || line_child->line_type == CLOSEBRACE)
             return generate(prev, line_child, multiline_block);
         
         current_line->child = line_child;
@@ -137,6 +139,7 @@ Returns the next line after the block that satrts with the current line
         break;
     }
     default:
+        return NULL;
         break;
     }
 }
