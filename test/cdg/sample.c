@@ -4,6 +4,7 @@ int main() {
     int x =0;
     switch (x)
     {
+        x--;
         case 0:
             x++;
             break;
