@@ -1,15 +1,6 @@
 #include "../../include/cfg/cfg.hpp"
 
-int CFG::idIncrement() {
-    return id_count++;
-}
-
-void CFG::idReset() {
-    id_count = 1;
-}
-
 CFG::CFG(Node* head) {
-    idReset();
     cdg = head;
 }
 
@@ -132,10 +123,11 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
     }
 }
 
-void CFG::createDot(Node* current, std::set<int>& st) {
+void CFG::createDot(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio) {
     if(current == NULL) {
         return;
     }
+
     std::cout << *current ;
     if (current->next)
         std::cout << "Next:" << *(current->next);
@@ -146,11 +138,31 @@ void CFG::createDot(Node* current, std::set<int>& st) {
     else
         std::cout << "Child: NULL\n";
     std::cout << "\n--------------------------------\n";
+    if(file_stack.find(current->ID) == file_stack.end()) {
+        fio << " " << current->ID << " [label=\"" << current->code << "\"];\n";
+        file_stack.insert(current->ID);
+    }
+    if(current->child != NULL && file_stack.find(current->child->ID) == file_stack.end()) {
+        fio << " " << current->child->ID << " [label=\"" << current->child->code << "\"];\n";
+        file_stack.insert(current->child->ID);
+    }
+    if(current->next != NULL && file_stack.find(current->next->ID) == file_stack.end()) {
+        fio << " " << current->next->ID << " [label=\"" << current->next->code << "\"];\n";
+        file_stack.insert(current->next->ID);
+    }
+
+    if(current->child != NULL) {
+        fio << " " << current->ID << " -> " << current->child->ID << ";\n";
+    }
+    if(current->next != NULL) {
+        fio << " " << current->ID << " -> " << current->next->ID << ";\n";
+    }
+    
     st.insert(current->ID);
     if(current->child != NULL && st.find(current->child->ID) == st.end()) {
-        createDot(current->child, st);
+        createDot(current->child, st, file_stack, fio);
     }
     if(current->next != NULL && st.find(current->next->ID) == st.end()) {
-        createDot(current->next, st);
+        createDot(current->next, st, file_stack, fio);
     }
 }

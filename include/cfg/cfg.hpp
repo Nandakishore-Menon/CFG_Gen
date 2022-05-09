@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <fstream>
 #include "../line_type.hpp"
 #include "../node.hpp"
 
@@ -15,9 +16,6 @@ public:
     Node* cdg;
     CFG(Node* head);
     std::vector<Node*> CFG_gen(Node* current);
-    void createDot(Node* current, std::set<int>& st);
-    int idIncrement();
-    void idReset();
-    friend std::ostream& operator<< (std::ostream& out, const Node& node);
+    void createDot(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio);
 };
 
