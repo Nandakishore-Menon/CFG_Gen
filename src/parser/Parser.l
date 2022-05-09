@@ -28,8 +28,6 @@ RETURN "return"({TSC}([^";"]*))?";"
 
 MCOMMENT                                                                                                                return p_MULTILINE_COMMENT;
 
-([0-9a-zA-Z_])([" "]*)([0-9A-Za-z_" "]*)"("([^\);])")"([" "\t\n])"{"                                                    return p_FUNCTION;
-
 "{"                                                                                                                     return p_OPENING_BRACE;
 
 "}"                                                                                                                     return p_CLOSING_BRACE;
@@ -62,6 +60,7 @@ MCOMMENT                                                                        
 
 "case"{TSC}([^:]*)":"                                                                                                   return p_CASE;
 
+([0-9a-zA-Z_])([" "]*)([0-9A-Za-z_" "]*)"("([^\);])")"([" "\t\n])"{"                                                    return p_FUNCTION;
 
 "continue"{TSC}";"                                                                                                      return p_CONTINUE;
 
@@ -75,6 +74,7 @@ MCOMMENT                                                                        
 
 <<EOF>>                                                                                                                 return p_ENDOFFILE;
 
+.                                                                                                                       return p_STATEMENT;
 
 
 %%
