@@ -1,4 +1,5 @@
-#include<iostream>
+#include <iostream>
+#include <vector>
 
 #include "./../../include/parser/parser_headers.h"
 #include "./../../include/node.hpp"
@@ -17,6 +18,8 @@ int main(void){
     Node *root = nullptr;
     Node *current = nullptr;
 
+    vector<Node*> function_roots;
+
     int ntoken, eof, ID=0;
     ntoken = yylex();
 
@@ -24,6 +27,15 @@ int main(void){
         // printf("Got the token %d\n",ntoken);
         // cout<<"Got the token "<<ntoken<<endl;
         // cout<<endl;
+
+        if (ntoken == p_FUNCTION){
+            Node *new_root = root;
+            function_roots.push_back(new_root);
+
+            root = nullptr;
+            current = nullptr;
+        }
+
         eof = linkToken(ntoken, root, current, ID);
         ID++;
 
@@ -66,16 +78,16 @@ int linkToken(int ntoken, Node *root, Node *current, int ID){
             break;
 
         case 2:
-            // cout<<"got preprocessor directive\n";
-            // cout<<"text :"<<yytext<<endl;
+            cout<<"got preprocessor directive\n";
+            cout<<"text :"<<yytext<<endl;
             break;
         case 3:
-            // cout<<"got single line comment\n";
-            // cout<<"text :"<<yytext<<endl;
+            cout<<"got single line comment\n";
+            cout<<"text :"<<yytext<<endl;
             break;
         case 4:
-            // cout<<"got multiline comment\n";
-            // cout<<"text :"<<yytext<<endl;
+            cout<<"got multiline comment\n";
+            cout<<"text :"<<yytext<<endl;
             break;
 
         case 5:
@@ -319,6 +331,10 @@ int linkToken(int ntoken, Node *root, Node *current, int ID){
                 current = root;
             }
 
+            else if (current->line_type == p_STATEMENT){
+                current->code = current->code + ';';
+            }
+
             else{
                 Node *node = new Node(ID, yytext, EXPRESSION, false);
 
@@ -461,7 +477,26 @@ int linkToken(int ntoken, Node *root, Node *current, int ID){
             }
 
             break;
+        
+        case 26:
+            cout<<"got a function definition\n";
+            cout<<"text :"<<yytext<<endl;
 
+            if (root == nullptr){
+                root = new Node(ID, yytext, FUNCTION, true);
+                current = root;
+            }
+
+            else{
+                Node *node = new Node(ID, yytext, FUNCTION, true);
+
+                current->next = node;
+                node->prev = current;
+                current = current->next;
+            }
+
+            break;
+        
         default:
             break;
     }

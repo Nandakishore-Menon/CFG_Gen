@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 
 int main(void){
     int a=0;
@@ -8,7 +8,7 @@ int main(void){
         while(d<10)d++;
     }
 
-    if(a>10){
+    if      (a>10)       {
         if(a>20)a++;
         else if(a<13)a;
         else {a;}
