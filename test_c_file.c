@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main(void){
+long long main(void){
     int a=0;
     long d=0;
     while(a<10){

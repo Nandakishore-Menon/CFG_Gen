@@ -7,5 +7,6 @@
 int main(void) {
     
     Node* root = generate_linked_list();
+    std::cout << "Generated licked list-----------\n";
     printListRec(root);
 }

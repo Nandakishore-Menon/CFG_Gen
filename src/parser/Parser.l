@@ -30,7 +30,7 @@
 
 "for("([^\(]*)\)                        return p_FOR;
 
-"while("([^\(]*)\)                      return p_WHILE;
+"while("([^\(]*)")"                      return p_WHILE;
 
 "if("([^\(]*)\)                         return p_IF;
 
@@ -46,7 +46,9 @@
 
 "case"([" "]*)([^:]*)":"                return p_CASE;
 
-([^" "]*)([" "]*)"("([^\)])*"){"        return p_FUNCTION;
+(([^" "\n\t]+)([" "]))+([" "]*)([^" "]+)([" "]*)"("([^\)])*"){"        return p_FUNCTION;
+
+(([^" "\n\t]+)([" "]*))+";"              return p_STATEMENT;
 
 "continue;"                             return p_CONTINUE;
 
@@ -58,6 +60,6 @@
 
 <<EOF>>                                 return p_ENDOFFILE;
 
-.                                       return p_STATEMENT;
+
 
 %%

@@ -3,6 +3,7 @@
 #include "./../../include/reader/ll_generator.hpp"
 #include "./../../include/parser/parser_headers.h"
 #include "./../../include/node.hpp"
+#include "./../../include/linked_list/list_ops.hpp"
 
 extern int yylex();
 extern int yylineno;
@@ -15,10 +16,10 @@ using namespace std;
 
 Node* generate_linked_list(void){
     
-    Node *root = nullptr;
-    Node *current = nullptr;
+    Node *root = NULL;
+    Node *current = NULL;
 
-    vector<Node*> function_roots;
+    // vector<Node*> function_roots;
 
     int ntoken, eof, ID=0;
     ntoken = yylex();
@@ -28,13 +29,13 @@ Node* generate_linked_list(void){
         // cout<<"Got the token "<<ntoken<<endl;
         // cout<<endl;
 
-        if (ntoken == p_FUNCTION){
-            Node *new_root = root;
-            function_roots.push_back(new_root);
+        // if (ntoken == p_FUNCTION){
+        //     Node *new_root = root;
+        //     function_roots.push_back(new_root);
 
-            root = nullptr;
-            current = nullptr;
-        }
+        //     root = NULL;
+        //     current = NULL;
+        // }
 
         eof = linkToken(ntoken, root, current, ID);
         ID++;
@@ -50,6 +51,7 @@ Node* generate_linked_list(void){
 }
 
 int linkToken(int ntoken, Node *root, Node *current, int ID){
+    Node* new_node;
     switch (ntoken)
         {
         case 0:
@@ -57,22 +59,26 @@ int linkToken(int ntoken, Node *root, Node *current, int ID){
             break;
         case 1:
             cout<<"got semicolon\n";
-
-            if (root == nullptr){
-                root = new Node(ID, yytext, EXPRESSION, false);
-                current = root;
+            
+            if (root == NULL){
+                // root = new Node(ID, yytext, EXPRESSION, false);
+                // current = root;
+                new_node = new Node(ID, yytext, EXPRESSION, false);
+                append(&root, new_node);
             }
 
-            else if (current->line_type == p_STATEMENT){
+            else if (current->line_type == EXPRESSION){
                 current->code = current->code + ';';
             }
 
             else{
-                Node *node = new Node(ID, yytext, EXPRESSION, false);
+                // Node *node = new Node(ID, yytext, EXPRESSION, false);
 
-                current->next = node;
-                node->prev = current;
-                current = current->next;
+                // current->next = node;
+                // node->prev = current;
+                // current = current->next;
+                new_node = new Node(ID, yytext, EXPRESSION, false);
+                append(&root, new_node);
             }
 
             break;
@@ -94,18 +100,21 @@ int linkToken(int ntoken, Node *root, Node *current, int ID){
             cout<<"got opening brace\n";
             cout<<"text :"<<yytext<<endl;
 
-            if (root == nullptr){
-                root = new Node(ID, yytext, OPENBRACE, true);
-                current = root;
-            }
+            // if (root == nullptr){
+            //     root = new Node(ID, yytext, OPENBRACE, true);
+            //     current = root;
+            // }
 
-            else{
-                Node *node = new Node(ID, yytext, OPENBRACE, true);
+            // else{
+            //     Node *node = new Node(ID, yytext, OPENBRACE, true);
 
-                current->next = node;
-                node->prev = current;
-                current = current->next;
-            }
+            //     current->next = node;
+            //     node->prev = current;
+            //     current = current->next;
+            // }
+
+            new_node = new Node(ID, yytext, OPENBRACE, true);
+            append(&root, new_node);
 
             break;
 
@@ -425,75 +434,36 @@ int linkToken(int ntoken, Node *root, Node *current, int ID){
             cout<<"got a break statement\n";
             cout<<"text :"<<yytext<<endl;
 
-            if (root == nullptr){
-                root = new Node(ID, yytext, BREAK, false);
-                current = root;
-            }
-
-            else{
-                Node *node = new Node(ID, yytext, BREAK, false);
-
-                current->next = node;
-                node->prev = current;
-                current = current->next;
-            }
-
+            new_node = new Node(ID, yytext, BREAK, false);
+            append(&root, new_node);
+            // printListRec(root);
             break;
 
         case 24:
             cout<<"got a continue statement\n";
             cout<<"text :"<<yytext<<endl;
 
-            if (root == nullptr){
-                root = new Node(ID, yytext, CONTINUE, false);
-                current = root;
-            }
-
-            else{
-                Node *node = new Node(ID, yytext, CONTINUE, false);
-
-                current->next = node;
-                node->prev = current;
-                current = current->next;
-            }
-
+            new_node = new Node(ID, yytext, CONTINUE, false);
+            append(&root, new_node);
+            // printListRec(root);
             break;
 
         case 25:
             cout<<"got a return statement\n";
             cout<<"text :"<<yytext<<endl;
 
-            if (root == nullptr){
-                root = new Node(ID, yytext, RETURN, false);
-                current = root;
-            }
-
-            else{
-                Node *node = new Node(ID, yytext, RETURN, false);
-
-                current->next = node;
-                node->prev = current;
-                current = current->next;
-            }
-
+            new_node = new Node(ID, yytext, RETURN, false);
+            append(&root, new_node);
+            // printListRec(root);
             break;
         
         case 26:
             cout<<"got a function definition\n";
             cout<<"text :"<<yytext<<endl;
-
-            if (root == nullptr){
-                root = new Node(ID, yytext, FUNCTION, true);
-                current = root;
-            }
-
-            else{
-                Node *node = new Node(ID, yytext, FUNCTION, true);
-
-                current->next = node;
-                node->prev = current;
-                current = current->next;
-            }
+            
+            new_node = new Node(ID, yytext, FUNCTION, true);
+            append(&root, new_node);
+            // printListRec(root);
 
             break;
         
