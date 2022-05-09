@@ -178,6 +178,9 @@ void CFG::createDotRec(Node* current, std::set<int>& st, std::set<int>& file_sta
             if(current->line_type == IF || current->line_type == ELSEIF) {
                 fio << " [label= \"true\" color=\"green\" fontcolor=\"green\"]";
             }
+            if(current->line_type == FOR || current->line_type == WHILE) {
+                    fio << " [label= \"true\" color=\"green\" fontcolor=\"green\"]";
+            }
             fio << ";\n";
         }
         
@@ -191,6 +194,9 @@ void CFG::createDotRec(Node* current, std::set<int>& st, std::set<int>& file_sta
             if(current->next->line_type == FOR || current->next->line_type == WHILE) {
                 if(st.find(current->next->ID) != st.end())
                     fio << " [label= \"end loop\"]";
+            }
+            if(current->line_type == FOR || current->line_type == WHILE) {
+                    fio << " [label= \"false\" color=\"red\" fontcolor=\"red\"]";
             }
             fio << ";\n";
         }
