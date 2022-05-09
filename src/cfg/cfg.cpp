@@ -10,6 +10,7 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
     std::cout<<*current_line;
     switch (current_line->line_type)
     {
+        case OPENBRACE:
         case EXPRESSION: {
             if(current_line->next == NULL || current_line->next->line_type == CLOSEBRACE) {
                 std::vector<Node*> loopbacks;
@@ -23,6 +24,9 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
             Node* line_child = current_line->child;
             std::vector<Node*> loopbacks = CFG_gen(line_child);
             Node* line_next = current_line->next;
+            if(line_next == NULL || line_next->line_type == CLOSEBRACE) {
+                loopbacks.push_back(current_line);      
+            }
             while(line_next != NULL && (line_next->line_type == ELSEIF || line_next->line_type == ELSE)) {
                 if(line_next->child != NULL) {
                     std::vector<Node*> next_loopbacks = CFG_gen(line_next->child);
@@ -34,9 +38,13 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
                 return loopbacks;
             }
             else {
+                std::cout << "\n-------loopback" << *current_line << " start----------\n";
+                std::cout << "\nnext: " << *line_next << " ----------\n";
                 for(auto& l: loopbacks) {
+                    std::cout << *l << "\n-----------------\n";
                     l->next = line_next;
                 }
+                std::cout << "\n-------loopback end----------\n";
                 return CFG_gen(line_next);
             }
             break;
@@ -150,14 +158,24 @@ void CFG::createDot(Node* current, std::set<int>& st, std::set<int>& file_stack,
         fio << " " << current->next->ID << " [label=\"" << current->next->code << "\"];\n";
         file_stack.insert(current->next->ID);
     }
-
     if(current->child != NULL) {
-        fio << " " << current->ID << " -> " << current->child->ID << ";\n";
+        fio << " " << current->ID << " -> " << current->child->ID;
+        if(current->line_type == IF || current->line_type == ELSEIF) {
+            fio << " [label= \"true\" color=\"green\" fontcolor=\"green\"]";
+        }
+        fio << ";\n";
     }
     if(current->next != NULL) {
-        fio << " " << current->ID << " -> " << current->next->ID << ";\n";
+        fio << " " << current->ID << " -> " << current->next->ID;
+        if(current->line_type == IF || current->line_type == ELSEIF) {
+            fio << " [label= \"false\" color=\"red\" fontcolor=\"red\"]";
+        }
+        if(current->next->line_type == FOR || current->next->line_type == WHILE) {
+            if(st.find(current->next->ID) != st.end())
+                fio << " [label= \"end loop\"]";
+        }
+        fio << ";\n";
     }
-    
     st.insert(current->ID);
     if(current->child != NULL && st.find(current->child->ID) == st.end()) {
         createDot(current->child, st, file_stack, fio);
