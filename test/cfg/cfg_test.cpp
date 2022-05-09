@@ -14,7 +14,7 @@ Node* generate_sample_code7();
 int main() {
     std::cout << "Test case 1:--------------------\n";
     std::cout << "\n--------------CDG-----------------\n";
-    Node* lines1 = generate_sample_code2();
+    Node* lines1 = generate_sample_code1();
     CDG* cdg1 = new CDG(lines1);
     std::cout << "--------------------------------\n";
     
