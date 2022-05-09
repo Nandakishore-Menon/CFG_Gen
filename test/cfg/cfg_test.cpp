@@ -13,7 +13,7 @@ int main() {
     std::cout << "--------------------------------\n";
     
     CFG* test1 = new CFG(cdg1->lines);
-    test1->CFG_gen(NULL, NULL, test1->cdg);
+    test1->CFG_gen(test1->cdg);
     // std::cout << "Test case 2:--------------------\n";
     // Node* lines2 = generate_sample_code2();
     // CDG* cdg2 = new CDG(lines2);
