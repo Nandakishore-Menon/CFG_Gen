@@ -11,7 +11,7 @@ extern char * yytext;
 
 using namespace std;
 
-int linkToken(int ntoken, Node **root, Node **current, int ID, string *s);
+int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *brace_count);
 // Node *root = new Node();
 
 Node* generate_linked_list(void){
@@ -20,6 +20,8 @@ Node* generate_linked_list(void){
     Node *current = NULL;
     string *s = new string();
     *s = "";
+    int *brace_count = new int();
+    *brace_count = 0;
 
     vector<Node**> function_roots;
 
@@ -39,7 +41,7 @@ Node* generate_linked_list(void){
             current = NULL;
         }
 
-        eof = linkToken(ntoken, &root, &current, ID, s);
+        eof = linkToken(ntoken, &root, &current, ID, s, brace_count);
         ID++;
 
         if(eof == 1){
@@ -56,7 +58,7 @@ Node* generate_linked_list(void){
     return root;
 }
 
-int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
+int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *brace_count){
     Node* new_node;
     int len;
     string const &whitespaces = " \r\n\t\v\f";
@@ -141,9 +143,28 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             cout<<"got opening brace\n";
             cout<<"text :"<<yytext<<endl;
 
-            new_node = new Node(ID, yytext, OPENBRACE, true);
-            *current = new_node;
-            append(root, new_node);
+            if (*brace_count == 0 && (*s).length() > 0){
+                
+                *s = *s + "{";
+
+                (*s).erase(0, (*s).find_first_not_of(whitespaces));
+                
+                new_node = new Node(ID, *s, FUNCTION, true);
+                *current = new_node;
+                append(root, new_node);
+
+                cout << *s << "\tFunction added\n";
+
+                *s = "";
+            }
+
+            else{
+                new_node = new Node(ID, yytext, OPENBRACE, true);
+                *current = new_node;
+                append(root, new_node);
+            }
+
+            *brace_count = *brace_count + 1;
 
             break;
 
@@ -155,6 +176,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             *current = new_node;
             append(root, new_node);
 
+            *brace_count = *brace_count - 1;
+
             break;
 
         case p_FOR_MULTILINE:
@@ -164,6 +187,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             new_node = new Node(ID, yytext, FOR, true);
             *current = new_node;
             append(root, new_node);
+
+            *brace_count = *brace_count + 1;
 
             break;
 
@@ -175,6 +200,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             *current = new_node;
             append(root, new_node);
 
+            *brace_count = *brace_count + 1;
+
             break;
 
         case p_IF_MULTILINE:
@@ -184,6 +211,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             new_node = new Node(ID, yytext, IF, true);
             *current = new_node;
             append(root, new_node);
+
+            *brace_count = *brace_count + 1;
 
             break;
 
@@ -195,6 +224,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             *current = new_node;
             append(root, new_node);
 
+            *brace_count = *brace_count + 1;
+
             break;
 
         case p_ELSE_MULTILINE:
@@ -204,6 +235,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             new_node = new Node(ID, yytext, ELSE, true);
             *current = new_node;
             append(root, new_node);
+
+            *brace_count = *brace_count + 1;
 
             break;
 
@@ -289,6 +322,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             *current = new_node;
             append(root, new_node);
 
+            *brace_count = *brace_count + 1;
+
             break;
 
         case p_CASE:
@@ -308,6 +343,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             new_node = new Node(ID, yytext, CASE, true);
             *current = new_node;
             append(root, new_node);
+
+            *brace_count = *brace_count + 1;
 
             break;
 
@@ -348,6 +385,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
             new_node = new Node(ID, yytext, FUNCTION, true);
             *current = new_node;
             append(root, new_node);
+
+            *brace_count = *brace_count + 1;
 
             break;
         
