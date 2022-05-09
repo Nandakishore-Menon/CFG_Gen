@@ -10,6 +10,7 @@ LISTTEST = $(TESTDIR)/linked_list
 
 # LL Generator
 READERSRC = $(SRCDIR)/reader
+READERINC = $(INCDIR)/reader
 
 # CDG
 CDGINC = $(INCDIR)/cdg
@@ -34,10 +35,23 @@ test_cdg: $(CDGTEST)/cdg_test.cpp $(CDGSRC)/cdg.cpp $(LISTSRC)/list_ops.cpp $(SR
 	g++ -o $(EXECDIR)/test_cdg $(CDGTEST)/cdg_test.cpp $(CDGSRC)/cdg.cpp $(LISTSRC)/list_ops.cpp $(SRCDIR)/node.cpp
 
 parser: $(PARSERINC)/parser_headers.h $(PARSERSRC)/Parser.l
-	flex -o $(EXECDIR)/lex.yy.c $(PARSERSRC)/Parser.l
+	flex -o $(PARSERSRC)/lex.yy.c $(PARSERSRC)/Parser.l
 
-reader: $(INCDIR)/node.hpp $(SRCDIR)/node.cpp $(READERSRC)/ll_generator.cpp
-	g++ -o $(EXECDIR)/ll_gen $(READERSRC)/ll_generator.cpp
+reader: $(INCDIR)/node.hpp $(SRCDIR)/node.cpp $(READERSRC)/ll_generator.cpp $(PARSERSRC)/lex.yy.c $(PARSERINC)/parser_headers.h
+	g++ -o $(EXECDIR)/ll_gen $(READERSRC)/ll_generator.cpp $(PARSERSRC)/lex.yy.c $(SRCDIR)/node.cpp
 
 test_cfg: $(INCDIR)/node.hpp $(CFGINC)/cfg.hpp $(CDGINC)/cdg.hpp $(LISTSRC)/list_ops.cpp $(CFGSRC)/cfg.cpp $(CDGSRC)/cdg.cpp $(LISTINC)/list_ops.hpp $(SRCDIR)/node.cpp
 	g++ -o $(EXECDIR)/test_cfg $(CFGTEST)/cfg_test.cpp $(CFGSRC)/cfg.cpp $(CDGSRC)/cdg.cpp $(LISTSRC)/list_ops.cpp $(SRCDIR)/node.cpp
+
+# ----------------------------
+ll_generator.o: $(READERSRC)/ll_generator.cpp $(READERINC)/ll_generator.hpp
+	g++ -c $(READERSRC)/ll_generator.cpp
+
+node.o: $(INCDIR)/node.hpp $(SRCDIR)/node.cpp
+	g++ -c $(SRCDIR)/node.cpp
+
+list_ops.o: $(LISTSRC)/list_ops.cpp $(LISTINC)/list_ops.hpp
+	g++ -c $(LISTSRC)/list_ops.cpp
+
+all: main.cpp $(PARSERSRC)/lex.yy.c $(PARSERINC)/parser_headers.h ll_generator.o node.o list_ops.o
+	g++ -o cfg_gen main.cpp $(PARSERSRC)/lex.yy.c ll_generator.o node.o list_ops.o

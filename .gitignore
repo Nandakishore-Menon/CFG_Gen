@@ -2,6 +2,7 @@
 .DS_Store
 exec
 *.dot
+cfg_gen
 
 # Prerequisites
 *.d

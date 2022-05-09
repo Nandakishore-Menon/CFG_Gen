@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-
+#include "./../../include/reader/ll_generator.hpp"
 #include "./../../include/parser/parser_headers.h"
 #include "./../../include/node.hpp"
 
@@ -10,10 +10,10 @@ extern char * yytext;
 
 using namespace std;
 
-int linkToken(int ntoken, Node *root, Node *current, int ID);
+// int linkToken(int ntoken, Node *root, Node *current, int ID);
 // Node *root = new Node();
 
-int main(void){
+Node* generate_linked_list(void){
     
     Node *root = nullptr;
     Node *current = nullptr;
@@ -46,7 +46,7 @@ int main(void){
         // next token
         ntoken = yylex();
     }
-    return 0;
+    return root;
 }
 
 int linkToken(int ntoken, Node *root, Node *current, int ID){
