@@ -39,5 +39,5 @@ parser: $(PARSERINC)/parser_headers.h $(PARSERSRC)/Parser.l
 reader: $(INCDIR)/node.hpp $(SRCDIR)/node.cpp $(READERSRC)/ll_generator.cpp
 	g++ -o $(EXECDIR)/ll_gen $(READERSRC)/ll_generator.cpp
 
-test_cfg: $(INCDIR)/node.hpp $(CFGINC)/cfg.hpp $(LISTSRC)/list_ops.cpp $(CFGSRC)/cfg.cpp $(LISTINC)/list_ops.hpp $(SRCDIR)/node.cpp
-	g++ -o $(EXECDIR)/test_cfg $(CFGTEST)/cfg_test.cpp $(CFGSRC)/cfg.cpp $(LISTSRC)/list_ops.cpp $(SRCDIR)/node.cpp
+test_cfg: $(INCDIR)/node.hpp $(CFGINC)/cfg.hpp $(CDGINC)/cdg.hpp $(LISTSRC)/list_ops.cpp $(CFGSRC)/cfg.cpp $(CDGSRC)/cdg.cpp $(LISTINC)/list_ops.hpp $(SRCDIR)/node.cpp
+	g++ -o $(EXECDIR)/test_cfg $(CFGTEST)/cfg_test.cpp $(CFGSRC)/cfg.cpp $(CDGSRC)/cdg.cpp $(LISTSRC)/list_ops.cpp $(SRCDIR)/node.cpp

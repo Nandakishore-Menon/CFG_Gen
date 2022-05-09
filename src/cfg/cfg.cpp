@@ -16,6 +16,7 @@ CFG::CFG(Node* head) {
 std::vector<Node*> CFG::CFG_gen(Node* current) {
     // returns all loopback nodes that might be needed by higher blocks
     Node* current_line = current;
+    std::cout<<*current_line;
     switch (current_line->line_type)
     {
         case EXPRESSION: {
@@ -31,7 +32,7 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
             Node* line_child = current_line->child;
             std::vector<Node*> loopbacks = CFG_gen(line_child);
             Node* line_next = current_line->next;
-            while(line_next->line_type == ELSEIF || line_next->line_type == ELSE) {
+            while(line_next != NULL && (line_next->line_type == ELSEIF || line_next->line_type == ELSE)) {
                 if(line_next->child != NULL) {
                     std::vector<Node*> next_loopbacks = CFG_gen(line_next->child);
                     loopbacks.insert(loopbacks.end(), next_loopbacks.begin(), next_loopbacks.end());
@@ -78,6 +79,16 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
         case DEFAULT:
         case CASE: {
             Node* line_child = current_line->child;
+            if (line_child == NULL) {
+                // empty case statement
+                std::cout << "empty case--------\n";
+                Node* next_case = current_line->next;
+                while (next_case->child == NULL) {
+                    next_case = next_case->next;
+                }
+                current_line->child = next_case->child;
+                return CFG_gen(current_line->next);
+            }
             std::vector<Node*> loopbacks = CFG_gen(line_child);
             for(int i = 0; i < loopbacks.size(); i++) {
                 Node* l = loopbacks[i];
@@ -86,7 +97,9 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
                         l->next = current_line->next;
                         loopbacks.erase(i + loopbacks.begin());
                     }
-
+                }
+                else {
+                    l->line_type = EXPRESSION;
                 }
             }
             if(current_line->next != NULL && current_line->next->line_type != CLOSEBRACE) {
@@ -116,5 +129,28 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
             break;
         }
 
+    }
+}
+
+void CFG::createDot(Node* current, std::set<int>& st) {
+    if(current == NULL) {
+        return;
+    }
+    std::cout << *current ;
+    if (current->next)
+        std::cout << "Next:" << *(current->next);
+    else
+        std::cout << "Next: NULL";
+    if (current->child)
+        std::cout << "Child" << *(current->child);
+    else
+        std::cout << "Child: NULL\n";
+    std::cout << "\n--------------------------------\n";
+    st.insert(current->ID);
+    if(current->child != NULL && st.find(current->child->ID) == st.end()) {
+        createDot(current->child, st);
+    }
+    if(current->next != NULL && st.find(current->next->ID) == st.end()) {
+        createDot(current->next, st);
     }
 }
