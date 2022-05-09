@@ -2,6 +2,7 @@
 
 CFG::CFG(Node* head) {
     cdg = head;
+    CFG_gen(cdg);
 }
 
 std::vector<Node*> CFG::CFG_gen(Node* current) {
@@ -53,6 +54,12 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
         case BREAK: {
             std::vector<Node*> loopback;
             loopback.push_back(current_line);
+            return loopback;
+            break;
+        }
+        case RETURN: {
+            current_line->next = NULL;
+            std::vector<Node*> loopback;
             return loopback;
             break;
         }
@@ -131,7 +138,7 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
     }
 }
 
-void CFG::createDot(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio) {
+void CFG::createDotRec(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio) {
     if(current == NULL) {
         return;
     }
@@ -178,9 +185,21 @@ void CFG::createDot(Node* current, std::set<int>& st, std::set<int>& file_stack,
     }
     st.insert(current->ID);
     if(current->child != NULL && st.find(current->child->ID) == st.end()) {
-        createDot(current->child, st, file_stack, fio);
+        createDotRec(current->child, st, file_stack, fio);
     }
     if(current->next != NULL && st.find(current->next->ID) == st.end()) {
-        createDot(current->next, st, file_stack, fio);
+        createDotRec(current->next, st, file_stack, fio);
     }
+}
+
+void CFG::createDot(std::string file_name) {
+    std::set<int> st;
+    std::fstream fio;
+    fio.open(file_name, std::ios::trunc | std::ios::out | std::ios::in);
+    std::set<int> file_stack;
+    fio << "digraph example {\n";
+    std::cout << "CFG----------------------------\n";
+    createDotRec(this->cdg, st, file_stack, fio);
+    fio << "}";
+    fio.close();
 }

@@ -26,7 +26,7 @@ int main() {
     fio.open("main.dot", std::ios::trunc | std::ios::out | std::ios::in);
     std::set<int> file_stack;
     fio << "digraph example {\n";
-    test1->createDot(test1->cdg, st, file_stack, fio);
+    test1->createDotRec(test1->cdg, st, file_stack, fio);
     fio << "}";
     fio.close();
     // std::cout << "Test case 2:--------------------\n";

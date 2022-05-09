@@ -11,25 +11,15 @@ void generate_CFG(Node* root, std::string func_name);
 int main(void) {
     
     Node* root = generate_linked_list();
-    std::cout << "Generated licked list-----------\n";
+    std::cout << "Generated linked list-----------\n";
     printListRec(root);
 
-    // generate_CFG(root->next, root->code);
+    generate_CFG(root->next, root->code);
 }
 
-/*
+
 void generate_CFG(Node* root, std::string func_name) {
     CDG* cdg = new CDG(root);
     CFG* cfg = new CFG(cdg->lines);
-    // cfg->CFG_gen();
-    std::cout << "\n--------------CFG-----------------\n";
-    std::set<int> st;
-    std::fstream fio;
-    fio.open(func_name, std::ios::trunc | std::ios::out | std::ios::in);
-    std::set<int> file_stack;
-    // fio << "digraph example {\n";
-    // test1->createDot(test1->cdg, st, file_stack, fio);
-    // fio << "}";
-    fio.close();
+    cfg->createDot(func_name+".dot");
 }
-*/

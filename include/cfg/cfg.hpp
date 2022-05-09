@@ -9,13 +9,11 @@
 
 class CFG
 {
-private:
-    int id_count;
-    
 public:
     Node* cdg;
     CFG(Node* head);
     std::vector<Node*> CFG_gen(Node* current);
-    void createDot(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio);
+    void createDot(std::string file_name);
+    void createDotRec(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio);
 };
 
