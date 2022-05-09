@@ -24,3 +24,4 @@
 #define p_BREAK 23
 #define p_CONTINUE 24
 #define p_RETURN 25
+#define p_FUNCTION 26

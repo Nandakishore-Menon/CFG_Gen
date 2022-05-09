@@ -46,13 +46,15 @@
 
 "case"([" "]*)([^:]*)":"                return p_CASE;
 
+([^" "]*)([" "]*)"("([^\)])*"){"        return p_FUNCTION;
+
 "continue;"                             return p_CONTINUE;
 
 "break;"                                return p_BREAK;
 
 "return"(([" "]*)([^";"]*))?";"         return p_RETURN;
 
-[\t\n]                                  return p_WHITE_TAB_SPACE;
+[\t\n" "]                               return p_WHITE_TAB_SPACE;
 
 <<EOF>>                                 return p_ENDOFFILE;
 
