@@ -54,8 +54,14 @@ node.o: $(INCDIR)/node.hpp $(SRCDIR)/node.cpp
 list_ops.o: $(LISTSRC)/list_ops.cpp $(LISTINC)/list_ops.hpp
 	g++ -c $(LISTSRC)/list_ops.cpp
 
-all: main.cpp parser $(PARSERINC)/parser_headers.h ll_generator.o node.o list_ops.o
-	g++ -o cfg_gen main.cpp $(PARSERSRC)/lex.yy.c ll_generator.o node.o list_ops.o
+cdg.o: $(CDGSRC)/cdg.cpp $(CDGINC)/cdg.hpp
+	g++ -c $(CDGSRC)/cdg.cpp
+
+cfg.o: $(CFGSRC)/cfg.cpp $(CFGINC)/cfg.hpp
+	g++ -c $(CFGSRC)/cfg.cpp
+
+all: main.cpp parser $(PARSERINC)/parser_headers.h ll_generator.o node.o list_ops.o cdg.o cfg.o
+	g++ -o cfg_gen main.cpp $(PARSERSRC)/lex.yy.c ll_generator.o node.o list_ops.o cdg.o cfg.o
 
 clean:
 	rm ./exec/* *.o

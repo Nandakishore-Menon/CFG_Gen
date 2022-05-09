@@ -6,7 +6,9 @@
 CDG::CDG(Node* lines) {
     this->lines = lines;
     generate(NULL, this->lines, true);
+    std::cout << "\nCDG---------------------------------\n";
     printListRec(this->lines);
+    std::cout << "\n------------------------------------\n";
 }
 
 Node* CDG::generate(Node* prev, Node* current, bool multiline_block) {

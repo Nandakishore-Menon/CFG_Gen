@@ -15,15 +15,15 @@ It is difficult to comprehend the behavior of a program from its source code. It
 
 However, doing so by hand can become taxing for large and complex programs and is prone to errors. The problem statement is to construct a tool that would draw the control flow graphs given syntactically correct programs(assuming the programs given to it compiles).
 
-#
-
 ## Solution Outline
 
 A block in a code is sequence of instructions is the program which have one entry point and one exit point. A control flow graph is a directed graph which shows the control flow paths in a program using edges between nodes which represent blocks. So the control flow graph shows all possible paths that a program might take while executing. 
 
 We will be building a tool CFG_generator to draw the CFG for a given c program. The tool can generate CFGs for programs which do not have syntax errors and which successfully compile. This tool is implemented in ```C++``` programming language.
 
-#
+## Instructions to use the CFG Generator
+
+
 
 ## References
 

@@ -226,7 +226,7 @@ int linkToken(int ntoken, Node **root, Node **current, int ID){
             // }
             
             // else{
-                new_node = new Node(ID, yytext, EXPRESSION, true);
+                new_node = new Node(ID, yytext, EXPRESSION, false);
                 *current = new_node;
                 append(root, new_node);
             // }

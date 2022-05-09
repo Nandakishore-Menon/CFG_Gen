@@ -2,6 +2,7 @@
 
 CFG::CFG(Node* head) {
     cdg = head;
+    CFG_gen(cdg);
 }
 
 std::vector<Node*> CFG::CFG_gen(Node* current) {
@@ -18,7 +19,7 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
                 return loopbacks;
             }
             return CFG_gen(current_line->next);
-
+            break;
         }
         case IF: {
             Node* line_child = current_line->child;
@@ -53,6 +54,12 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
         case BREAK: {
             std::vector<Node*> loopback;
             loopback.push_back(current_line);
+            return loopback;
+            break;
+        }
+        case RETURN: {
+            current_line->next = NULL;
+            std::vector<Node*> loopback;
             return loopback;
             break;
         }
@@ -120,6 +127,7 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
             }
             std::vector<Node*> next_loopbacks;
             return next_loopbacks;
+            break;
         }
         case CLOSEBRACE: 
         default: {
@@ -131,7 +139,7 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
     }
 }
 
-void CFG::createDot(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio) {
+void CFG::createDotRec(Node* current, std::set<int>& st, std::set<int>& file_stack, std::fstream& fio) {
     if(current == NULL) {
         return;
     }
@@ -147,40 +155,73 @@ void CFG::createDot(Node* current, std::set<int>& st, std::set<int>& file_stack,
         std::cout << "Child: NULL\n";
     std::cout << "\n--------------------------------\n";
     if(file_stack.find(current->ID) == file_stack.end()) {
-        fio << " " << current->ID << " [label=\"" << current->code << "\"];\n";
-        file_stack.insert(current->ID);
+        if(current->line_type != CLOSEBRACE && current->line_type != OPENBRACE) {
+            fio << " " << current->ID << " [label=\"" << current->code << "\"];\n";
+            file_stack.insert(current->ID);
+        }
     }
     if(current->child != NULL && file_stack.find(current->child->ID) == file_stack.end()) {
-        fio << " " << current->child->ID << " [label=\"" << current->child->code << "\"];\n";
-        file_stack.insert(current->child->ID);
+        if(current->child->line_type != CLOSEBRACE && current->child->line_type != OPENBRACE) {
+            fio << " " << current->child->ID << " [label=\"" << current->child->code << "\"];\n";
+            file_stack.insert(current->child->ID);
+        }
     }
     if(current->next != NULL && file_stack.find(current->next->ID) == file_stack.end()) {
-        fio << " " << current->next->ID << " [label=\"" << current->next->code << "\"];\n";
-        file_stack.insert(current->next->ID);
+        if(current->next->line_type != CLOSEBRACE && current->next->line_type != OPENBRACE) {
+            fio << " " << current->next->ID << " [label=\"" << current->next->code << "\"];\n";
+            file_stack.insert(current->next->ID);
+        }
     }
     if(current->child != NULL) {
-        fio << " " << current->ID << " -> " << current->child->ID;
-        if(current->line_type == IF || current->line_type == ELSEIF) {
-            fio << " [label= \"true\" color=\"green\" fontcolor=\"green\"]";
+        if((current->line_type != OPENBRACE && current->child->line_type != OPENBRACE) && (current->line_type != CLOSEBRACE && current->child->line_type != CLOSEBRACE)) {
+            fio << " " << current->ID << " -> " << current->child->ID;
+            if(current->line_type == IF || current->line_type == ELSEIF) {
+                fio << " [label= \"true\" color=\"green\" fontcolor=\"green\"]";
+            }
+            if(current->line_type == FOR || current->line_type == WHILE) {
+                    fio << " [label= \"true\" color=\"green\" fontcolor=\"green\"]";
+            }
+            fio << ";\n";
         }
-        fio << ";\n";
+        
     }
     if(current->next != NULL) {
-        fio << " " << current->ID << " -> " << current->next->ID;
-        if(current->line_type == IF || current->line_type == ELSEIF) {
-            fio << " [label= \"false\" color=\"red\" fontcolor=\"red\"]";
+        if((current->line_type != OPENBRACE && current->next->line_type != OPENBRACE) && (current->line_type != CLOSEBRACE && current->next->line_type != CLOSEBRACE)) {
+            fio << " " << current->ID << " -> " << current->next->ID;
+            if(current->line_type == IF || current->line_type == ELSEIF) {
+                fio << " [label= \"false\" color=\"red\" fontcolor=\"red\"]";
+            }
+            if(current->next->line_type == FOR || current->next->line_type == WHILE) {
+                if(st.find(current->next->ID) != st.end())
+                    fio << " [label= \"end loop\"]";
+            }
+            if(current->line_type == FOR || current->line_type == WHILE) {
+                    fio << " [label= \"false\" color=\"red\" fontcolor=\"red\"]";
+            }
+            fio << ";\n";
         }
-        if(current->next->line_type == FOR || current->next->line_type == WHILE) {
-            if(st.find(current->next->ID) != st.end())
-                fio << " [label= \"end loop\"]";
-        }
-        fio << ";\n";
     }
     st.insert(current->ID);
     if(current->child != NULL && st.find(current->child->ID) == st.end()) {
-        createDot(current->child, st, file_stack, fio);
+        if(current->child->line_type != CLOSEBRACE && current->child->line_type != OPENBRACE) {
+            createDotRec(current->child, st, file_stack, fio);
+        }
     }
     if(current->next != NULL && st.find(current->next->ID) == st.end()) {
-        createDot(current->next, st, file_stack, fio);
+        if(current->next->line_type != CLOSEBRACE && current->next->line_type != OPENBRACE) {
+            createDotRec(current->next, st, file_stack, fio);
+        }
     }
+}
+
+void CFG::createDot(std::string file_name) {
+    std::set<int> st;
+    std::fstream fio;
+    fio.open(file_name, std::ios::trunc | std::ios::out | std::ios::in);
+    std::set<int> file_stack;
+    fio << "digraph example {\n";
+    std::cout << "CFG----------------------------\n";
+    createDotRec(this->cdg, st, file_stack, fio);
+    fio << "}";
+    fio.close();
 }
