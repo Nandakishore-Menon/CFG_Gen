@@ -4,64 +4,77 @@
 
 %option noyywrap
 MCOMMENT "/*"([^*]|(\*+[^*/]))*\*+\/
-NSC [^\);]*
+TSC [" "\t\n{MCOMMENT}]*
+FOR "for"([" "\t\n]*)"("([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^\)]*)")"([" "\t\n]*)"{"
+MWHILE "while"([^\(]*)"("([^\)]*)")"([^\)]*)"{"
+WHILE "while"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*[^\);]*)*")"
+MIF "if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")"([" "\t\n{MCOMMENT}]*)"{"
+IF "if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")" 
+MELSE "else"([" "\t\n{MCOMMENT}]*)"if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")"([" "\t\n{MCOMMENT}]*)"{"
+ELSE "else"([" "\t\n{MCOMMENT}]*)"{"
+SWITCH "switch"{TSC}"("([^\)]*)\){TSC}"{"
+CASE "case"{TSC}([^:]*)":"
+DEFAULT "default"{TSC}":"
+BREAK "break"{TSC}";"
+CONTINUE "continue"{TSC}";"
+RETURN "return"({TSC}([^";"]*))?";" 
 %%
 
-;                                       return p_SEMICOLON;
+;                                                                                                                       return p_SEMICOLON;
 
-[#][^\n]*                               return p_PREPROCESSOR;
+[#][^\n]*                                                                                                               return p_PREPROCESSOR;
 
-"//"([^\n])*                            return p_SINGLE_LINE_COMMENT;
+"//"([^\n])*                                                                                                            return p_SINGLE_LINE_COMMENT;
 
-MCOMMENT            return p_MULTILINE_COMMENT;
+MCOMMENT                                                                                                                return p_MULTILINE_COMMENT;
 
-"{"                                     return p_OPENING_BRACE;
+"{"                                                                                                                     return p_OPENING_BRACE;
 
-"}"                                     return p_CLOSING_BRACE;
+"}"                                                                                                                     return p_CLOSING_BRACE;
 
-"for"([" "\t\n]*)"("([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^\)]*)")"([" "\t\n]*)"{" return p_FOR_MULTILINE;
+"for"([" "\t\n]*)"("([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^\)]*)")"([" "\t\n]*)"{"                  return p_FOR_MULTILINE;
 
-"while"([^\(]*)"("([^\)]*)")"([^\)]*)"{" return p_WHILE_MULTILINE;
+"while"([^\(]*)"("([^\)]*)")"([^\)]*)"{"                                                                                return p_WHILE_MULTILINE;
 
-"while"([^\(]*)"("([^\)]*)")" return p_WHILE;
+"while"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*[^\);]*)*")"                                                       return p_WHILE;
 
-"if"([^\(]*)\(([^\)]*)\)([\t\n" "]*)"{"              return p_IF_MULTILINE;
+"if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")"([" "\t\n{MCOMMENT}]*)"{"                               return p_IF_MULTILINE;
 
-"else if("([^\(]*)\)([" "]*)"{"         return p_ELSE_IF_MULTILINE;
+"else"([" "\t\n{MCOMMENT}]*)"if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")"([" "\t\n{MCOMMENT}]*)"{"   return p_ELSE_IF_MULTILINE;
 
-"else"([" "]*)"{"                       return p_ELSE_MULTILINE;
+"else"([" "\t\n{MCOMMENT}]*)"{"                                                                                         return p_ELSE_MULTILINE;
 
 "for"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^\)]*)")" return p_FOR;
-"for("([^\(]*)\)                        return p_FOR;
 
-"if("([^\(]*)\)                         return p_IF;
+"if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")"                                                        return p_IF;
 
-"else if("([^\(]*)\)                    return p_ELSE_IF;
+"else"([" "\t\n{MCOMMENT}]*)"if"([" "\t\n{MCOMMENT}]*)"("(([" "\t\n{MCOMMENT}]*[^\);]*)*)")"                            return p_ELSE_IF;
 
-"else"                                  return p_ELSE;
+"else"                                                                                                                  return p_ELSE;
 
-"switch("([^\(]*)\)([" "]*)"{"          return p_SWITCH_MULTILINE;
+"switch"{TSC}"("([^\)]*)\){TSC}"{"                                                                                      return p_SWITCH_MULTILINE;
 
-"switch("([^\(]*)\)                     return p_SWITCH;
+"switch"{TSC}"("([^\)]*)\)                                                                                              return p_SWITCH;
 
-"case"([" "]*)([^:]*)":"([" "]*)"{"     return p_CASE_MULTILINE;
+"case"{TSC}([^:]*)":"{TSC}"{"                                                                                           return p_CASE_MULTILINE;
 
-"case"([" "]*)([^:]*)":"                return p_CASE;
+"case"{TSC}([^:]*)":"                                                                                                   return p_CASE;
 
-(([^" "\n\t]+)([" "]))+([" "]*)([^" "]+)([" "]*)"("([^\)])*"){"        return p_FUNCTION;
+([0-9a-zA-Z_])([" "]*)([0-9A-Za-z_" "]*)"("([^\);])")"([" "\t\n])"{"                                                    return p_FUNCTION;
 
-(([^" "\n\t]+)([" "]*))+";"              return p_STATEMENT;
+"continue"{TSC}";"                                                                                                      return p_CONTINUE;
 
-"continue;"                             return p_CONTINUE;
+"break"{TSC}";"                                                                                                         return p_BREAK;
 
-"break;"                                return p_BREAK;
+"default"{TSC}":"                                                                                                       return p_DEFAULT;
 
-"return"(([" "]*)([^";"]*))?";"         return p_RETURN;
+"return"({TSC}([^";"]*))?";"                                                                                            return p_RETURN;
 
-[\t\n" "]                               return p_WHITE_TAB_SPACE;
+[\t\n" "]                                                                                                               return p_WHITE_TAB_SPACE;
 
-<<EOF>>                                 return p_ENDOFFILE;
+<<EOF>>                                                                                                                 return p_ENDOFFILE;
 
+.                                                                                                                       return p_STATEMENT;
 
 
 %%

@@ -25,3 +25,4 @@
 #define p_CONTINUE 24
 #define p_RETURN 25
 #define p_FUNCTION 26
+#define p_DEFAULT 27

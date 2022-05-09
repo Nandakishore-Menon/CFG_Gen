@@ -11,15 +11,17 @@ extern char * yytext;
 
 using namespace std;
 
-int linkToken(int ntoken, Node **root, Node **current, int ID);
+int linkToken(int ntoken, Node **root, Node **current, int ID, string *s);
 // Node *root = new Node();
 
 Node* generate_linked_list(void){
     
     Node *root = NULL;
     Node *current = NULL;
+    string *s = new string();
+    *s = "";
 
-    // vector<Node*> function_roots;
+    vector<Node**> function_roots;
 
     int ntoken, eof, ID=0;
     ntoken = yylex();
@@ -29,15 +31,15 @@ Node* generate_linked_list(void){
         // cout<<"Got the token "<<ntoken<<endl;
         // cout<<endl;
 
-        // if (ntoken == p_FUNCTION){
-        //     Node *new_root = root;
-        //     function_roots.push_back(new_root);
+        if (ntoken == p_FUNCTION){
+            Node **new_root = &root;
+            function_roots.push_back(new_root);
 
-        //     root = NULL;
-        //     current = NULL;
-        // }
+            root = NULL;
+            current = NULL;
+        }
 
-        eof = linkToken(ntoken, &root, &current, ID);
+        eof = linkToken(ntoken, &root, &current, ID, s);
         ID++;
 
         if(eof == 1){
@@ -54,26 +56,69 @@ Node* generate_linked_list(void){
     return root;
 }
 
-int linkToken(int ntoken, Node **root, Node **current, int ID){
+int linkToken(int ntoken, Node **root, Node **current, int ID, string *s){
     Node* new_node;
+    int len;
+    string const &whitespaces = " \r\n\t\v\f";
+
     switch (ntoken)
         {
         case 0:
-            // cout<<"got whitespace and tabspace\n";
-            break;
-            
-        case 1:
-            cout<<"got semicolon\n";
 
-            // if (current->line_type == EXPRESSION){
-            //     current->code = current->code + ';';
+            // if ((*current)->line_type == EXPRESSION){
+            //     s = (*current)->code;
+                len = (*s).length();
+
+                // if (len != 0 && (*s)[len-1] != ';'){
+                //     if((*s)[len-1] != ' ' || (*s)[len-1] != '\t' || (*s)[len-1] != '\n'){
+                        *s = *s + " ";
+                //         cout<<"added whitespace, tabspace, newline\n";
+                //     }
+                // }
+                // else{
+                //     new_node = new Node(ID, yytext, EXPRESSION, false);
+                //     *current = new_node;
+                //     append(root, new_node);
+                // }
             // }
 
             // else{
-                new_node = new Node(ID, yytext, EXPRESSION, false);
-                *current = new_node;
-                append(root, new_node);
+            //     new_node = new Node(ID, yytext, EXPRESSION, false);
+            //     *current = new_node;
+            //     append(root, new_node);
             // }
+
+            break;
+
+        case 1:
+            cout<<"got semicolon\n";
+
+            // if ((*current)->line_type == EXPRESSION){
+            //     s = (*current)->code;
+            //     len = s.length();
+
+            //     if (s[len-1] != ';')
+            //         (*current)->code = s + ";";
+            //     else{
+            //         new_node = new Node(ID, yytext, EXPRESSION, false);
+            //         *current = new_node;
+            //         append(root, new_node);
+            //     }
+            // }
+
+            *s = *s + ";";
+
+            // while((*s)[0] == ' ' || (*s)[0] == '\t' || (*s)[0] == '\n'){
+                (*s).erase(0, (*s).find_first_not_of(whitespaces));
+            // }
+            
+            new_node = new Node(ID, *s, EXPRESSION, false);
+            *current = new_node;
+            append(root, new_node);
+            
+            cout << *s << "\t statement added\n";
+
+            *s = "";
 
             break;
 
@@ -221,17 +266,10 @@ int linkToken(int ntoken, Node **root, Node **current, int ID){
             cout<<"got statement\n";
             cout<<"text :"<<yytext<<endl;
             
-            // if (current->line_type == EXPRESSION){
-            //     current->code = current->code + yytext;
-            // }
-            
-            // else{
-                new_node = new Node(ID, yytext, EXPRESSION, false);
-                *current = new_node;
-                append(root, new_node);
-            // }
+            *s = *s + yytext;
 
             break;
+
 
         case p_SWITCH:
             cout<<"got a switch statement\n";
