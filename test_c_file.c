@@ -77,8 +77,7 @@ void func4(  )
 
 void func5() {
     int x=0;
-    switch(x) 
-    {
+    switch(x) {
         case 0:
             x++;
         case 1:

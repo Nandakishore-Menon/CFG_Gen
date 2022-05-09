@@ -55,6 +55,7 @@ vector<Node*> generate_linked_list(void){
     }
 
     // printListRec(root);
+    function_roots.push_back(root);
     return function_roots;
 }
 
@@ -147,8 +148,8 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *b
                 
                 function_roots.push_back(*root);
 
-                root = nullptr;
-                current = nullptr;
+                *root = nullptr;
+                *current = nullptr;
 
                 *s = *s + "{";
 
