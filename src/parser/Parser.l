@@ -19,16 +19,13 @@ MCOMMENT            return p_MULTILINE_COMMENT;
 
 "}"                                     return p_CLOSING_BRACE;
 
-"for"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^\)]*)")"([" "\t\n{MCOMMENT}]*)"{" return p_FOR_MULTILINE;
+"for"([" "\t\n]*)"("([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^;]*)";"([" "\t\n]*)([^\)]*)")"([" "\t\n]*)"{" return p_FOR_MULTILINE;
 
-"while"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}{NSC}]*)")"([" "\t\n{MCOMMENT}]*)"{" return p_WHILE_MULTILINE;
-"while"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}{NSC}]*)")" return p_WHILE;
+"while"([^\(]*)"("([^\)]*)")"([^\)]*)"{" return p_WHILE_MULTILINE;
 
+"while"([^\(]*)"("([^\)]*)")" return p_WHILE;
 
-
-"while("([^\(]*)\)([" "]*)"{"           return p_WHILE_MULTILINE;
-
-"if("([^\(]*)\)([" "]*)"{"              return p_IF_MULTILINE;
+"if"([^\(]*)\(([^\)]*)\)([\t\n" "]*)"{"              return p_IF_MULTILINE;
 
 "else if("([^\(]*)\)([" "]*)"{"         return p_ELSE_IF_MULTILINE;
 
@@ -36,8 +33,6 @@ MCOMMENT            return p_MULTILINE_COMMENT;
 
 "for"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^\)]*)")" return p_FOR;
 "for("([^\(]*)\)                        return p_FOR;
-
-"while("([^\(]*)")"                      return p_WHILE;
 
 "if("([^\(]*)\)                         return p_IF;
 

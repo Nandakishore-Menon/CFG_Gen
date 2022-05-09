@@ -50,7 +50,7 @@ Node* generate_linked_list(void){
         ntoken = yylex();
     }
 
-    printListRec(root);
+    // printListRec(root);
     return root;
 }
 

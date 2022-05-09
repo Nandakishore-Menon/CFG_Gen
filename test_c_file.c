@@ -3,7 +3,7 @@
 long long main(void){
     int a=0;
     long d=0;
-    while(a/*dwq*/</*qsx*/10){
+    while(a/*dwq*/</*qsx*/10)/* wd*/{
         a++;
         while(d<10)d++;
     }
@@ -32,6 +32,7 @@ void func2() {
     int x = 0 ;
     int y = 2 ;
     for (int i = 0;/*dwsh*/ i < 10; i++)
+    /**/
         if (x < 5) {
             x = y ;
             y += 1 ;
