@@ -3,6 +3,8 @@
 exec
 *.dot
 cfg_gen
+*.png
+lex.yy.c
 
 # Prerequisites
 *.d

@@ -14,13 +14,11 @@ Node* generate_sample_code7();
 int main() {
     std::cout << "Test case 1:--------------------\n";
     std::cout << "\n--------------CDG-----------------\n";
-    Node* lines1 = generate_sample_code1();
+    Node* lines1 = generate_sample_code2();
     CDG* cdg1 = new CDG(lines1);
     std::cout << "--------------------------------\n";
     
     CFG* test1 = new CFG(cdg1->lines);
-    test1->CFG_gen(test1->cdg);
-    std::cout << "\n--------------CFG-----------------\n";
     std::set<int> st;
     std::fstream fio;
     fio.open("main.dot", std::ios::trunc | std::ios::out | std::ios::in);
