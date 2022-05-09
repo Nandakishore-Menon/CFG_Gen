@@ -3,7 +3,8 @@
 %}
 
 %option noyywrap
-
+MCOMMENT "/*"([^*]|(\*+[^*/]))*\*+\/
+NSC [^\);]*
 %%
 
 ;                                       return p_SEMICOLON;
@@ -12,13 +13,18 @@
 
 "//"([^\n])*                            return p_SINGLE_LINE_COMMENT;
 
-"/*"([^*]|(\*+[^*/]))*\*+\/             return p_MULTILINE_COMMENT;
+MCOMMENT            return p_MULTILINE_COMMENT;
 
 "{"                                     return p_OPENING_BRACE;
 
 "}"                                     return p_CLOSING_BRACE;
 
-"for("([^\(]*)\)([" "]*)"{"             return p_FOR_MULTILINE;
+"for"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^\)]*)")"([" "\t\n{MCOMMENT}]*)"{" return p_FOR_MULTILINE;
+
+"while"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}{NSC}]*)")"([" "\t\n{MCOMMENT}]*)"{" return p_WHILE_MULTILINE;
+"while"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}{NSC}]*)")" return p_WHILE;
+
+
 
 "while("([^\(]*)\)([" "]*)"{"           return p_WHILE_MULTILINE;
 
@@ -28,6 +34,7 @@
 
 "else"([" "]*)"{"                       return p_ELSE_MULTILINE;
 
+"for"([" "\t\n{MCOMMENT}]*)"("([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^;]*)";"([" "\t\n{MCOMMENT}]*)([^\)]*)")" return p_FOR;
 "for("([^\(]*)\)                        return p_FOR;
 
 "while("([^\(]*)")"                      return p_WHILE;
