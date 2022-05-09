@@ -60,6 +60,17 @@ cdg.o: $(CDGSRC)/cdg.cpp $(CDGINC)/cdg.hpp
 cfg.o: $(CFGSRC)/cfg.cpp $(CFGINC)/cfg.hpp
 	g++ -c $(CFGSRC)/cfg.cpp
 
+.SILENT: install
+install:
+	if ! which dot; then \
+		echo "Dependencies not satisfied!!!"; \
+		read -p "Install dependencies. Press ENTER to continue? : " confirm;\
+		sudo apt install graphviz;\
+	else \
+		echo "building CFG_gen";\
+		make all;\
+		cp cfg_gen ${HOME}/.local/bin;\
+	fi
 all: main.cpp parser $(PARSERINC)/parser_headers.h ll_generator.o node.o list_ops.o cdg.o cfg.o
 	g++ -o cfg_gen main.cpp $(PARSERSRC)/lex.yy.c ll_generator.o node.o list_ops.o cdg.o cfg.o
 
