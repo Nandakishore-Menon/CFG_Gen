@@ -14,7 +14,9 @@ using namespace std;
 int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *brace_count);
 // Node *root = new Node();
 
-Node* generate_linked_list(void){
+vector<Node*> function_roots;
+
+vector<Node*> generate_linked_list(void){
     
     Node *root = NULL;
     Node *current = NULL;
@@ -22,8 +24,6 @@ Node* generate_linked_list(void){
     *s = "";
     int *brace_count = new int();
     *brace_count = 0;
-
-    vector<Node**> function_roots;
 
     int ntoken, eof, ID=0;
     ntoken = yylex();
@@ -33,13 +33,13 @@ Node* generate_linked_list(void){
         // cout<<"Got the token "<<ntoken<<endl;
         // cout<<endl;
 
-        if (ntoken == p_FUNCTION){
-            Node **new_root = &root;
-            function_roots.push_back(new_root);
+        // if (ntoken == p_FUNCTION){
+        //     Node **new_root = &root;
+        //     function_roots.push_back(*new_root);
 
-            root = NULL;
-            current = NULL;
-        }
+        //     root = NULL;
+        //     current = NULL;
+        // }
 
         eof = linkToken(ntoken, &root, &current, ID, s, brace_count);
         ID++;
@@ -55,7 +55,7 @@ Node* generate_linked_list(void){
     }
 
     // printListRec(root);
-    return root;
+    return function_roots;
 }
 
 int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *brace_count){
@@ -145,6 +145,11 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *b
 
             if (*brace_count == 0 && (*s).length() > 0){
                 
+                function_roots.push_back(*root);
+
+                root = nullptr;
+                current = nullptr;
+
                 *s = *s + "{";
 
                 (*s).erase(0, (*s).find_first_not_of(whitespaces));

@@ -1,5 +1,6 @@
 #pragma once
 #include "../node.hpp"
+#include <vector>
 
 int linkToken(int ntoken, Node *root, Node *current, int ID);
-Node* generate_linked_list(void);
+std::vector<Node*> generate_linked_list(void);
