@@ -48,7 +48,5 @@ To convert the .dot files generated to .png:
 
 
 ## References
+[A Control Flow Graph Generator for Java Code](https://theses.liacs.nl/pdf/DavidDeMuinickKeizer.pdf)
 
-[Automating Control-Flow Graph Generation from Source Code](https://libraetd.lib.virginia.edu/downloads/4t64gn77x?filename=Le\_Kenneth\_Technical\_Report.pdf): This paper introduces an automated test requirement generation prototype tool, which generates control-flow graphs from program source code. This paper analyzes the quality of generated control-flow graphs by examining the effectiveness of tests derived from control-flow graphs. 
-
-[StatiCFG](https://github.com/coetaur0/staticfg): StatiCFG is a package that can be used to produce control flow graphs (CFGs) for Python 3 programs. The CFGs it generates can be easily visualised with graphviz and used for static analysis. This analysis is actually the main purpose of the module.
