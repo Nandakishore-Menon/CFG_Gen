@@ -75,4 +75,4 @@ all: main.cpp parser $(PARSERINC)/parser_headers.h ll_generator.o node.o list_op
 	g++ -o cfg_gen main.cpp $(PARSERSRC)/lex.yy.c ll_generator.o node.o list_ops.o cdg.o cfg.o
 
 clean:
-	rm ./exec/* *.o
+	rm *.o *.dot *.png cfg_gen

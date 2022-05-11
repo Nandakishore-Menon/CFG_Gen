@@ -11,12 +11,15 @@ void generate_CFG(Node* root, std::string func_name);
 int main(void) {
     
     std::vector<Node*> roots = generate_linked_list();
-    std::cout << "Generated linked list-----------\n";
+    // std::cout << "Generated linked list-----------\n";
+    int func_count = 1;
     for(auto& root: roots) {
-        std::cout << "\n-------------------------------------------------------------------------\n";
-        printListRec(root);
-        if (root != NULL)
-            generate_CFG(root->next, root->code);
+        // std::cout << "\n-------------------------------------------------------------------------\n";
+        // printListRec(root);
+        if (root != NULL) {
+            generate_CFG(root->next, "func" + std::to_string(func_count));
+            func_count++;
+        }
     }
     
 

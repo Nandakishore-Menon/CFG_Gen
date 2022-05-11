@@ -29,17 +29,6 @@ vector<Node*> generate_linked_list(void){
     ntoken = yylex();
 
     while(ntoken != p_ENDOFFILE){
-        // printf("Got the token %d\n",ntoken);
-        // cout<<"Got the token "<<ntoken<<endl;
-        // cout<<endl;
-
-        // if (ntoken == p_FUNCTION){
-        //     Node **new_root = &root;
-        //     function_roots.push_back(*new_root);
-
-        //     root = NULL;
-        //     current = NULL;
-        // }
 
         eof = linkToken(ntoken, &root, &current, ID, s, brace_count);
         ID++;
@@ -48,13 +37,10 @@ vector<Node*> generate_linked_list(void){
             break;
         }
 
-        // printListRec(current);
-
         // next token
         ntoken = yylex();
     }
 
-    // printListRec(root);
     function_roots.push_back(root);
     return function_roots;
 }
@@ -67,53 +53,19 @@ int linkToken(int ntoken, Node **root, Node **current, int ID, string *s, int *b
     switch (ntoken)
         {
         case 0:
-
-            // if ((*current)->line_type == EXPRESSION){
-            //     s = (*current)->code;
                 len = (*s).length();
 
-                // if (len != 0 && (*s)[len-1] != ';'){
-                //     if((*s)[len-1] != ' ' || (*s)[len-1] != '\t' || (*s)[len-1] != '\n'){
-                        *s = *s + " ";
-                //         cout<<"added whitespace, tabspace, newline\n";
-                //     }
-                // }
-                // else{
-                //     new_node = new Node(ID, yytext, EXPRESSION, false);
-                //     *current = new_node;
-                //     append(root, new_node);
-                // }
-            // }
-
-            // else{
-            //     new_node = new Node(ID, yytext, EXPRESSION, false);
-            //     *current = new_node;
-            //     append(root, new_node);
-            // }
-
+                *s = *s + " ";
             break;
 
         case 1:
             cout<<"got semicolon\n";
 
-            // if ((*current)->line_type == EXPRESSION){
-            //     s = (*current)->code;
-            //     len = s.length();
-
-            //     if (s[len-1] != ';')
-            //         (*current)->code = s + ";";
-            //     else{
-            //         new_node = new Node(ID, yytext, EXPRESSION, false);
-            //         *current = new_node;
-            //         append(root, new_node);
-            //     }
-            // }
 
             *s = *s + ";";
 
-            // while((*s)[0] == ' ' || (*s)[0] == '\t' || (*s)[0] == '\n'){
-                (*s).erase(0, (*s).find_first_not_of(whitespaces));
-            // }
+            (*s).erase(0, (*s).find_first_not_of(whitespaces));
+
             
             new_node = new Node(ID, *s, EXPRESSION, false);
             *current = new_node;

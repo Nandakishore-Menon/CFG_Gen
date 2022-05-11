@@ -6,9 +6,9 @@
 CDG::CDG(Node* lines) {
     this->lines = lines;
     generate(NULL, this->lines, true);
-    std::cout << "\nCDG---------------------------------\n";
-    printListRec(this->lines);
-    std::cout << "\n------------------------------------\n";
+    // std::cout << "\nCDG---------------------------------\n";
+    // printListRec(this->lines);
+    // std::cout << "\n------------------------------------\n";
 }
 
 Node* CDG::generate(Node* prev, Node* current, bool multiline_block) {
@@ -16,7 +16,6 @@ Node* CDG::generate(Node* prev, Node* current, bool multiline_block) {
 Returns the next line after the block that satrts with the current line
 */
     Node* current_line = current;
-    // std::cout << "\nCurrent line: " << *current_line;
     if (current_line->next == NULL) {
         return NULL;
     }
@@ -29,11 +28,9 @@ Returns the next line after the block that satrts with the current line
     {
         // return current_line->next;
         if (multiline_block) {
-            // std::cout << "test1\n";getchar();
             return generate(current, current_line->next, multiline_block);
         }
         else {
-            // std::cout << "test2\n";getchar();
             Node* line_next = current_line->next;
             current_line->next = NULL;
             return line_next;
@@ -51,9 +48,7 @@ Returns the next line after the block that satrts with the current line
         if (line_next == NULL) {
             current_line->next = NULL;
             return NULL;
-        }
-        // std::cout << "Current line: ..." << *current_line;
-        // std::cout << "Possible next line: ..." << *line_next << std::endl; 
+        } 
         if (multiline_block || line_next->line_type == ELSEIF || line_next->line_type == ELSE) {
             // Then this block is not the last in the current block
             // Next block will belong to the current block itself
@@ -74,7 +69,6 @@ Returns the next line after the block that satrts with the current line
     case WHILE:
     case SWITCH: //multiline always true
     {
-        // std::cout<< "--------------Going into conditionals\n";
         Node* line_child = current_line->next;
         current_line->child = line_child;
         line_child->parent = current_line;
@@ -83,8 +77,6 @@ Returns the next line after the block that satrts with the current line
             current_line->next = NULL;
             return NULL;
         }
-        // std::cout << "Current line: ..." << *current_line;
-        // std::cout << "Possible next line: ..." << *line_next << std::endl; 
         if (multiline_block) {
             // Then this block is not the last in the current block
             // Next block will belong to the current block itself
@@ -136,7 +128,6 @@ Returns the next line after the block that satrts with the current line
     {
         Node* line_next = current_line->next;
         current_line->next = NULL;
-        // std::cout<<"-----"<< *(current_line->prev) <<"---closing returning..." << *line_next;
         return line_next;
         break;
     }

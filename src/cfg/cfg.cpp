@@ -8,7 +8,6 @@ CFG::CFG(Node* head) {
 std::vector<Node*> CFG::CFG_gen(Node* current) {
     // returns all loopback nodes that might be needed by higher blocks
     Node* current_line = current;
-    std::cout<<*current_line;
     switch (current_line->line_type)
     {
         case OPENBRACE:
@@ -39,13 +38,9 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
                 return loopbacks;
             }
             else {
-                std::cout << "\n-------loopback" << *current_line << " start----------\n";
-                std::cout << "\nnext: " << *line_next << " ----------\n";
                 for(auto& l: loopbacks) {
-                    std::cout << *l << "\n-----------------\n";
                     l->next = line_next;
                 }
-                std::cout << "\n-------loopback end----------\n";
                 return CFG_gen(line_next);
             }
             break;
@@ -87,7 +82,6 @@ std::vector<Node*> CFG::CFG_gen(Node* current) {
             Node* line_child = current_line->child;
             if (line_child == NULL) {
                 // empty case statement
-                std::cout << "empty case--------\n";
                 Node* next_case = current_line->next;
                 while (next_case->child == NULL) {
                     next_case = next_case->next;
@@ -144,6 +138,7 @@ void CFG::createDotRec(Node* current, std::set<int>& st, std::set<int>& file_sta
         return;
     }
 
+    /*
     std::cout << *current ;
     if (current->next)
         std::cout << "Next:" << *(current->next);
@@ -154,6 +149,8 @@ void CFG::createDotRec(Node* current, std::set<int>& st, std::set<int>& file_sta
     else
         std::cout << "Child: NULL\n";
     std::cout << "\n--------------------------------\n";
+    */
+   
     if(file_stack.find(current->ID) == file_stack.end()) {
         if(current->line_type != CLOSEBRACE && current->line_type != OPENBRACE) {
             fio << " " << current->ID << " [label=\"" << current->code << "\"];\n";
@@ -220,7 +217,7 @@ void CFG::createDot(std::string file_name) {
     fio.open(file_name, std::ios::trunc | std::ios::out | std::ios::in);
     std::set<int> file_stack;
     fio << "digraph example {\n";
-    std::cout << "CFG----------------------------\n";
+    // std::cout << "CFG----------------------------\n";
     createDotRec(this->cdg, st, file_stack, fio);
     fio << "}";
     fio.close();
